@@ -53,10 +53,10 @@ export default function LoginView() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="phoneNumber"
+              label="Phone number"
+              name="phoneNumber"
+              autoComplete="phoneNumber"
               autoFocus
             />
             <TextField

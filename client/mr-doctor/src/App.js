@@ -3,6 +3,7 @@ import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LoginView from "./components/LoginView";
+import RegisterationView from "./components/RegisterationView";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         </a>
       </header> */}
       <Header page="login" />
-      <LoginView />
+      {/* <LoginView /> */}
+      <RegisterationView />
       <Footer />
     </div>
   );
