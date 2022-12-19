@@ -3,8 +3,8 @@ import AppConstants from "../constants/AppConstants";
 
 const registerUser = async (data) => {
   const result = await axios.post(AppConstants.LOCAL_BE_URL, data);
-  const final = await result.status;
-  return final;
+  return result;
 };
 
-export const apiCalls = { registerUser };
+const apiCalls = { registerUser };
+export default apiCalls;

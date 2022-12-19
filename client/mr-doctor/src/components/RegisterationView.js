@@ -1,5 +1,5 @@
 import * as React from "react";
-import { registerUser } from "../utils/apiCalls";
+import apiCalls from "../utils/apiCalls";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,10 +18,13 @@ const theme = createTheme();
 export default function RegisterationView() {
   const [user, setUser] = React.useState({});
   React.useEffect(() => {
-    console.log("User registeration request initiated", user);
-    const resultStatus = registerUser(user);
-    if (resultStatus === 200) {
-      console.log("Success");
+    if (user.length > 0) {
+      console.log("User registeration request initiated", user);
+      const result = apiCalls.registerUser(user);
+      if (result.status === 200) {
+        console.log("Success");
+        window.sessionStorage.setItem("dr_token", result?.data?.data?.token);
+      }
     }
   }, [user]);
 
