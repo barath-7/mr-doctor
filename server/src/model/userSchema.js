@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     dateOfBirth:Date,
     address:String,
     aadhaarNumber:String,
+    token:{
+        type:String,
+        required:true
+    },
     gender:{
         type:String,
         enum:[
