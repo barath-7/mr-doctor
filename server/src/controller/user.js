@@ -1,11 +1,14 @@
-const { createUserService } = require("../service/userService");
+const { createUserService, userLoginService } = require("../service/userService");
 
 const createUser = async (req,res) =>{
      try {
         let { body = {}} = req;
         let response = await createUserService(body);
+        let {data = {}} = response;
+        let { token = ''} = data;
+
         if(response.status == 'success'){
-            return res.status(200).json(response);
+            return res.cookie('authToken',token).status(200).json(response);
         }else {
             return res.status(400).json(response);
         }
@@ -18,6 +21,29 @@ const createUser = async (req,res) =>{
      }
 }
 
+const userLogin = async (req,res) => {
+    try {
+        let { body = {}} = req;
+        let response = await userLoginService(body);
+        let {data = {}} = response;
+        let { token = ''} = data;
+
+        if(response.status == 'success'){
+            return res.cookie('authToken',token).status(200).json(response);
+        }else {
+            return res.status(400).json(response);
+        }
+        
+    } catch (error) {
+        console.log(`Error while user login: ${error}`)
+        return res.status(400).json({
+            status:"failure",
+            message:"Error while user login"
+        });
+    }
+}
+
 module.exports = {
-    createUser
+    createUser,
+    userLogin
 }
