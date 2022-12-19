@@ -19,7 +19,7 @@ export default function Gender(props) {
         id="gender"
         row
         aria-labelledby="demo-controlled-radio-buttons-group"
-        name="controlled-radio-buttons-group"
+        name="gender"
         value={value}
         onChange={handleChange}
       >
