@@ -5,6 +5,9 @@ const registerUser = async (data) => {
   const result = await axios.post(AppConstants.LOCAL_BE_URL, data);
   return result;
 };
-
+const loginUser = async (data) => {
+  const result = await axios.post(AppConstants.LOCAL_BE_URL, data);
+  return result;
+};
 const apiCalls = { registerUser };
 export default apiCalls;
