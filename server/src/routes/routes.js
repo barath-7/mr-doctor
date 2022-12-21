@@ -8,4 +8,7 @@ module.exports = (app) =>
         .get("/healthcheck",(req,res)=>{
             res.status(200).send("Server is up and running");
         })
+        .get('/',(req,res)=>{
+            res.status(200).send("Mr.Doctor Application");
+        })
         .use('/user',userRoutes())

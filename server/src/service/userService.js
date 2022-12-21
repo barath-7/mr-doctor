@@ -1,7 +1,7 @@
 const { isEmpty, pickBy, omit, identity } = require("lodash");
 const User = require("../model/userSchema");
 const { generateToken } = require("./helper/authTokenHelper");
-const { hashPassword } = require("./helper/passwordHelper");
+const { hashPassword, validatePassword } = require("./helper/passwordHelper");
 
 const createUserService = async (body) =>{
     let { name = '', email = '', password = '', phoneNumber = '', dateOfBirth = '',
@@ -83,6 +83,54 @@ const validateUserRegistrationData = async(bodyPayload) =>{
 
 }
 
+
+const userLoginService = async (body) =>{
+    try {
+        let { phoneNumber = '', password = ''} = body;
+        if(isEmpty(phoneNumber) || isEmpty(password)){
+            return {
+                status:"failure",
+                message:"Mandatory fields are missing"
+            };
+        }
+
+        let userData = await User.findOne({ phoneNumber },{ phoneNumber : 1, password: 1}) || {};
+        if(isEmpty(userData)){
+            return {
+                status:"failure",
+                message:"Phone Number do not exists"
+            };
+        }
+
+        let { password:hashedPassword = ''} = userData || {};
+        let isPasswordValid = await validatePassword(password,hashedPassword);
+        if(!isPasswordValid){
+            return {
+                status:"failure",
+                message:"Invalid password"
+            };
+        }
+    
+        let authToken = await generateToken(phoneNumber) || '';
+
+        return {
+            status:"success",
+            message:"User Logged in succesfully.",
+            data:{
+                token:authToken
+            }
+        }
+
+    } catch (error) {
+        console.log(`Error while user login: ${error}`)
+        return {
+            status:"failure",
+            message:"Error while user login"
+        };
+    }
+}
+
 module.exports = {
-    createUserService
+    createUserService,
+    userLoginService
 }
