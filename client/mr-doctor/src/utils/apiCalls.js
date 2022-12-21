@@ -9,5 +9,5 @@ const loginUser = async (data) => {
   const result = await axios.post(AppConstants.LOCAL_BE_URL, data);
   return result;
 };
-const apiCalls = { registerUser };
+const apiCalls = { registerUser,loginUser };
 export default apiCalls;
