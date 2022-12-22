@@ -3,8 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,12 +11,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import phoneValidator from "../utils/phoneNumber";
 
 const theme = createTheme();
 
 export default function LoginView() {
+  const [isValidPhone, setIsValidPhone] = React.useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -54,6 +56,8 @@ export default function LoginView() {
               sx={{ mt: 1 }}
             >
               <TextField
+                error={isValidPhone}
+                helperText={isValidPhone ? "Incorrect phone number" : ""}
                 margin="normal"
                 required
                 fullWidth
@@ -62,6 +66,16 @@ export default function LoginView() {
                 name="phoneNumber"
                 autoComplete="phoneNumber"
                 autoFocus
+                onFocus={(e) => {
+                  if (isValidPhone) {
+                    setIsValidPhone(false);
+                  }
+                }}
+                onBlur={(e) => {
+                  if (!phoneValidator(e.target.value)) {
+                    setIsValidPhone(true);
+                  }
+                }}
               />
               <TextField
                 margin="normal"
@@ -73,10 +87,6 @@ export default function LoginView() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
               <Button
                 type="submit"
                 fullWidth
@@ -87,7 +97,9 @@ export default function LoginView() {
               </Button>
               <Grid container>
                 <Grid item>
-                  <Link to="/register">{"Don't have an account? Sign Up"}</Link>
+                  <Link to="/register" style={{ textDecoration: "none" }}>
+                    {"Don't have an account? Sign Up"}
+                  </Link>
                 </Grid>
               </Grid>
             </Box>

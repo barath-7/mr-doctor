@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import LoginView from "./components/LoginView";
+import LoginView from "./views/LoginView";
 import Home from "./components/Home";
-import RegisterationView from "./components/RegisterationView";
+import RegisterationView from "./views/RegisterationView";
 
 function App() {
   return (

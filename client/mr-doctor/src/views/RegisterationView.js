@@ -10,14 +10,21 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Gender from "./Gender";
+import Gender from "../components/Gender";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { handleSubmit } from "../utils/formSubmit";
+import phoneValidator from "../utils/phoneNumber";
+import { aadhaarNumberValidator } from "../utils/aadharValidator";
+var validator = require("email-validator");
 
 const theme = createTheme();
 
 export default function RegisterationView() {
+  const [isValidEmail, setIsValidEmail] = React.useState(false);
+  const [isValidPhone, setIsValidPhone] = React.useState(false);
+  const [isValidAadhar, setIsValidAadhar] = React.useState(false);
   const [user, setUser] = React.useState({});
   React.useEffect(() => {
     if (user.length > 0) {
@@ -29,25 +36,6 @@ export default function RegisterationView() {
       }
     }
   }, [user]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const userDataTemp = {};
-    const userData = {};
-    for (const pair of data.entries()) {
-      userDataTemp[pair[0]] = pair[1];
-    }
-    userData["name"] = userDataTemp.firstName + " " + userDataTemp.lastName;
-    userData["email"] = userDataTemp.email;
-    userData["password"] = userDataTemp.password;
-    userData["phoneNumber"] = userDataTemp.phoneNumber;
-    userData["dateOfBirth"] = userDataTemp.dob;
-    userData["address"] = userDataTemp.address + "\n" + userDataTemp.pincode;
-    userData["aadhaarNumber"] = userDataTemp.aadhar;
-    userData["gender"] = userDataTemp.gender;
-    setUser({ ...userData });
-  };
 
   return (
     <>
@@ -72,7 +60,13 @@ export default function RegisterationView() {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={(e) => {
+                const result = handleSubmit(e);
+                if (result) {
+                  console.log(result);
+                  setUser(result);
+                }
+              }}
               sx={{ mt: 3, mb: 8 }}
             >
               <Grid container spacing={2}>
@@ -99,15 +93,32 @@ export default function RegisterationView() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    error={isValidEmail}
+                    helperText={isValidEmail ? "Incorrect Email" : ""}
                     fullWidth
                     id="email"
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    onFocus={(e) => {
+                      if (isValidEmail) {
+                        setIsValidEmail(false);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (
+                        e.target.value !== "" &&
+                        !validator?.validate(e.target.value)
+                      ) {
+                        setIsValidEmail(true);
+                      }
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    error={isValidPhone}
+                    helperText={isValidPhone ? "Incorrect Phone number" : ""}
                     required
                     fullWidth
                     name="phoneNumber"
@@ -115,6 +126,16 @@ export default function RegisterationView() {
                     type="tel"
                     id="phoneNumber"
                     autoComplete="phone-number"
+                    onFocus={(e) => {
+                      if (isValidPhone) {
+                        setIsValidPhone(false);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (!phoneValidator(e.target.value)) {
+                        setIsValidPhone(true);
+                      }
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -167,12 +188,24 @@ export default function RegisterationView() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
+                    error={isValidAadhar}
+                    helperText={isValidAadhar ? "Aadhar number is invalid" : ""}
                     fullWidth
                     name="aadhar"
                     label="Aadhar number"
                     type="text"
                     id="aadhar"
                     autoComplete="aadhar"
+                    onFocus={(e) => {
+                      if (isValidPhone) {
+                        setIsValidAadhar(false);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (!aadhaarNumberValidator(e.target.value)) {
+                        setIsValidAadhar(true);
+                      }
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -186,7 +219,9 @@ export default function RegisterationView() {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link to="/login">Already have an account? Sign in</Link>
+                  <Link to="/login" style={{ textDecoration: "none" }}>
+                    Already have an account? Sign in
+                  </Link>
                 </Grid>
               </Grid>
             </Box>
