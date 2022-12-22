@@ -17,11 +17,13 @@ import Footer from "../components/Footer";
 import { handleSubmit } from "../utils/formSubmit";
 import phoneValidator from "../utils/phoneNumber";
 import { aadhaarNumberValidator } from "../utils/aadharValidator";
+import { useNavigate } from "react-router-dom";
 var validator = require("email-validator");
 
 const theme = createTheme();
 
 export default function RegisterationView() {
+  const history = useNavigate();
   const [isValidEmail, setIsValidEmail] = React.useState(false);
   const [isValidPhone, setIsValidPhone] = React.useState(false);
   const [isValidAadhar, setIsValidAadhar] = React.useState(false);
@@ -30,12 +32,14 @@ export default function RegisterationView() {
     if (user.length > 0) {
       console.log("User registeration request initiated", user);
       const result = apiCalls.registerUser(user);
+      console.log(result);
       if (result.status === 200) {
         console.log("Success");
-        window.sessionStorage.setItem("dr_token", result?.data?.data?.token);
+        history("/");
+        // window.sessionStorage.setItem("dr_token", result?.data?.data?.token);
       }
     }
-  }, [user]);
+  }, [user, history]);
 
   return (
     <>

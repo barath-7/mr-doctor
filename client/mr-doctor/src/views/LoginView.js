@@ -14,20 +14,30 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import phoneValidator from "../utils/phoneNumber";
+import { handleSubmit } from "../utils/formLogin";
+import apiCalls from "../utils/apiCalls";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function LoginView() {
+  const history = useNavigate();
   const [isValidPhone, setIsValidPhone] = React.useState(false);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+  const [user, setUser] = React.useState({});
+  React.useEffect(() => {
+    if (user.phoneNumber) {
+      console.log("User login request initiated", user);
+      apiCalls
+        .loginUser(user)
+        .then((res) => {
+          if (res.status === 200) {
+            history("/");
+          }
+          console.log("Received result as promise from apiCall", res);
+        })
+        .catch((e) => console.log("Received error as promise from API", e));
+    }
+  }, [user, history]);
 
   return (
     <>
@@ -51,7 +61,10 @@ export default function LoginView() {
             </Typography>
             <Box
               component="form"
-              onSubmit={handleSubmit}
+              onSubmit={(e) => {
+                const result = handleSubmit(e);
+                setUser({ ...result });
+              }}
               noValidate
               sx={{ mt: 1 }}
             >
