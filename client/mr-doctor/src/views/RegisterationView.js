@@ -29,15 +29,17 @@ export default function RegisterationView() {
   const [isValidAadhar, setIsValidAadhar] = React.useState(false);
   const [user, setUser] = React.useState({});
   React.useEffect(() => {
-    if (user.length > 0) {
+    if (user.phoneNumber) {
       console.log("User registeration request initiated", user);
-      const result = apiCalls.registerUser(user);
-      console.log(result);
-      if (result.status === 200) {
-        console.log("Success");
-        history("/");
-        // window.sessionStorage.setItem("dr_token", result?.data?.data?.token);
-      }
+      apiCalls
+        .registerUser(user)
+        .then((res) => {
+          if (res.status === 200) {
+            history("/");
+          }
+          console.log("Received result as promise from apiCall", res);
+        })
+        .catch((e) => console.log("Received error as promise from API", e));
     }
   }, [user, history]);
 
