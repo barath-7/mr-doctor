@@ -6,14 +6,15 @@ const registerUser = async (data) => {
     AppConstants.BE_URL + AppConstants.REGISTER_USER,
     data
   );
-  return result;
+  return await result;
 };
 const loginUser = async (data) => {
+  console.log("Login api request received", data);
   const result = await axios.post(
-    AppConstants.BE_URL + AppConstants.LOCAL_BE_URL,
+    AppConstants.BE_URL + AppConstants.LOGIN_USER,
     data
   );
-  return result;
+  return await result;
 };
 const apiCalls = { registerUser, loginUser };
 export default apiCalls;
