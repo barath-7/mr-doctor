@@ -41,6 +41,16 @@ export default function LoginView() {
   React.useEffect(() => {
     if (user.phoneNumber?.length === 10) {
       console.log("User login request initiated", user);
+      (async () => {
+        try {
+          const result = await apiCalls.loginUser(user);
+          if (result?.data?.status === "success") {
+            history("/");
+          }
+        } catch (err) {
+          
+        }
+      })();
       apiCalls
         .loginUser(user)
         .then((res) => {
