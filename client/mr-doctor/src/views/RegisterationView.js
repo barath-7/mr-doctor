@@ -45,7 +45,7 @@ export default function RegisterationView() {
     });
   };
   React.useEffect(() => {
-    if (user.phoneNumber.length === 10) {
+    if (user.phoneNumber?.length === 10) {
       console.log("User registeration request initiated", user);
       apiCalls
         .registerUser(user)
