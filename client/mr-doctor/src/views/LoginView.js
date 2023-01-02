@@ -47,9 +47,7 @@ export default function LoginView() {
           if (result?.data?.status === "success") {
             history("/");
           }
-        } catch (err) {
-          
-        }
+        } catch (err) {}
       })();
       apiCalls
         .loginUser(user)
@@ -109,7 +107,9 @@ export default function LoginView() {
               >
                 <TextField
                   error={isValidPhone}
-                  helperText={isValidPhone ? "Incorrect phone number" : ""}
+                  helperText={
+                    isValidPhone ? "Phone number is incorrect or empty" : ""
+                  }
                   margin="normal"
                   required
                   fullWidth

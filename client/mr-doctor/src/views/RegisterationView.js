@@ -26,9 +26,12 @@ const theme = createTheme();
 
 export default function RegisterationView() {
   const history = useNavigate();
-
+  const [isValidName, setisValidName] = React.useState("");
   const [isValidEmail, setIsValidEmail] = React.useState(false);
   const [isValidPhone, setIsValidPhone] = React.useState(false);
+  const [isValidPassword, setIsValidPassword] = React.useState(false);
+  const [isValidAddress, setIsValidAddress] = React.useState(false);
+  const [isValidDOB, setIsValidDOB] = React.useState(false);
   const [isValidAadhar, setIsValidAadhar] = React.useState(false);
   const [user, setUser] = React.useState({});
   const [modal, setModal] = React.useState({
@@ -45,7 +48,16 @@ export default function RegisterationView() {
     });
   };
   React.useEffect(() => {
-    if (user.phoneNumber?.length === 10) {
+    if (
+      isValidName.length < 1 &&
+      !isValidAadhar &&
+      !isValidAddress &&
+      !isValidDOB &&
+      !isValidEmail &&
+      !isValidPassword &&
+      !isValidPhone &&
+      user?.phoneNumber?.length > 1
+    ) {
       console.log("User registeration request initiated", user);
       apiCalls
         .registerUser(user)
@@ -92,21 +104,16 @@ export default function RegisterationView() {
               <Typography component="h1" variant="h5">
                 Register here !
               </Typography>
-              <Box
-                component="form"
-                noValidate
-                onSubmit={(e) => {
-                  const result = handleSubmit(e);
-                  if (result) {
-                    console.log(result);
-                    setUser(result);
-                  }
-                }}
-                sx={{ mt: 3, mb: 8 }}
-              >
+              <Box component="form" noValidate sx={{ mt: 3, mb: 8 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
+                      error={isValidName === "Name cannot be empty"}
+                      helperText={
+                        isValidName === "Name cannot be empty"
+                          ? isValidName
+                          : ""
+                      }
                       autoComplete="given-name"
                       name="firstName"
                       required
@@ -114,11 +121,18 @@ export default function RegisterationView() {
                       id="firstName"
                       label="First Name"
                       autoFocus
+                      onFocus={(e) => {
+                        setisValidName("");
+                      }}
+                      onBlur={(e) => {
+                        if (e.currentTarget.value.length < 1) {
+                          setisValidName("Name cannot be empty");
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      required
                       fullWidth
                       id="lastName"
                       label="Last Name"
@@ -129,20 +143,23 @@ export default function RegisterationView() {
                   <Grid item xs={12}>
                     <TextField
                       error={isValidEmail}
-                      helperText={isValidEmail ? "Incorrect Email" : ""}
+                      helperText={
+                        isValidEmail ? "Email is incorrect or empty" : ""
+                      }
                       fullWidth
+                      required
                       id="email"
                       label="Email Address"
                       name="email"
                       autoComplete="email"
-                      onFocus={(e) => {
+                      onFocus={() => {
                         if (isValidEmail) {
                           setIsValidEmail(false);
                         }
                       }}
                       onBlur={(e) => {
                         if (
-                          e.target.value !== "" &&
+                          e.target.value !== "" ||
                           !validator?.validate(e.target.value)
                         ) {
                           setIsValidEmail(true);
@@ -153,7 +170,9 @@ export default function RegisterationView() {
                   <Grid item xs={12}>
                     <TextField
                       error={isValidPhone}
-                      helperText={isValidPhone ? "Incorrect Phone number" : ""}
+                      helperText={
+                        isValidPhone ? "Phone number is incorrect or empty" : ""
+                      }
                       required
                       fullWidth
                       name="phoneNumber"
@@ -175,6 +194,10 @@ export default function RegisterationView() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
+                      error={isValidPassword}
+                      helperText={
+                        isValidPassword ? "Password is incorrect or empty" : ""
+                      }
                       required
                       fullWidth
                       name="password"
@@ -182,10 +205,34 @@ export default function RegisterationView() {
                       type="password"
                       id="password"
                       autoComplete="new-password"
+                      onFocus={(e) => {
+                        if (isValidPassword) {
+                          setIsValidPassword(false);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (e.target.value.length < 1) {
+                          setIsValidPassword(true);
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
+                      error={isValidDOB}
+                      helperText={
+                        isValidDOB ? "Date of birth cannot be empty" : ""
+                      }
+                      onFocus={(e) => {
+                        if (isValidPassword) {
+                          setIsValidDOB(false);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (e.target.value.length < 1) {
+                          setIsValidDOB(true);
+                        }
+                      }}
                       required
                       fullWidth
                       name="dob"
@@ -201,6 +248,20 @@ export default function RegisterationView() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
+                      error={isValidAddress}
+                      helperText={
+                        isValidAddress ? "Address or Pincode is empty" : ""
+                      }
+                      onFocus={(e) => {
+                        if (isValidAddress) {
+                          setIsValidAddress(false);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (e.target.value.length < 1) {
+                          setIsValidAddress(true);
+                        }
+                      }}
                       required
                       fullWidth
                       name="address"
@@ -219,6 +280,20 @@ export default function RegisterationView() {
                       type="text"
                       id="pinCode"
                       autoComplete="address"
+                      error={isValidAddress}
+                      helperText={
+                        isValidAddress ? "Address or Pincode is empty" : ""
+                      }
+                      onFocus={(e) => {
+                        if (isValidAddress) {
+                          setIsValidAddress(false);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (e.target.value.length < 1) {
+                          setIsValidAddress(true);
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -251,6 +326,14 @@ export default function RegisterationView() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const result = handleSubmit(e);
+                    if (result) {
+                      console.log(result);
+                      setUser(result);
+                    }
+                  }}
                 >
                   Register
                 </Button>
