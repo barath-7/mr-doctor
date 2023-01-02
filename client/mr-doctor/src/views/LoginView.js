@@ -41,6 +41,14 @@ export default function LoginView() {
   React.useEffect(() => {
     if (user.phoneNumber?.length === 10) {
       console.log("User login request initiated", user);
+      (async () => {
+        try {
+          const result = await apiCalls.loginUser(user);
+          if (result?.data?.status === "success") {
+            history("/");
+          }
+        } catch (err) {}
+      })();
       apiCalls
         .loginUser(user)
         .then((res) => {
@@ -99,7 +107,9 @@ export default function LoginView() {
               >
                 <TextField
                   error={isValidPhone}
-                  helperText={isValidPhone ? "Incorrect phone number" : ""}
+                  helperText={
+                    isValidPhone ? "Phone number is incorrect or empty" : ""
+                  }
                   margin="normal"
                   required
                   fullWidth

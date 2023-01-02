@@ -6,7 +6,7 @@ const registerUser = async (data) => {
     AppConstants.BE_URL + AppConstants.REGISTER_USER,
     data
   );
-  return await result;
+  return  result;
 };
 const loginUser = async (data) => {
   console.log("Login api request received", data);
@@ -14,7 +14,7 @@ const loginUser = async (data) => {
     AppConstants.BE_URL + AppConstants.LOGIN_USER,
     data
   );
-  return await result;
+  return result;
 };
 const apiCalls = { registerUser, loginUser };
 export default apiCalls;

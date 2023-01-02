@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
 export default function Gender(props) {
-  const [value, setValue] = React.useState("female");
+  const [value, setValue] = React.useState("male");
 
   const handleChange = (event) => {
     setValue(event.target.value);
