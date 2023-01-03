@@ -4,6 +4,11 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setHelperTextName,
+  resetHelperTextName,
+} from "../features/helperTextNameSlice";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -26,8 +31,13 @@ const theme = createTheme();
 
 export default function RegisterationView() {
   const history = useNavigate();
-  const [isValidName, setisValidName] = React.useState("");
+  // const [isValidName, setisValidName] = React.useState("");
+  const isValidName = useSelector((state) => {
+    return state.helperTextName.value;
+  });
+  const dispatch = useDispatch();
   const [isValidEmail, setIsValidEmail] = React.useState(false);
+
   const [isValidPhone, setIsValidPhone] = React.useState(false);
   const [isValidPassword, setIsValidPassword] = React.useState(false);
   const [isValidAddress, setIsValidAddress] = React.useState(false);
@@ -122,11 +132,13 @@ export default function RegisterationView() {
                       label="First Name"
                       autoFocus
                       onFocus={(e) => {
-                        setisValidName("");
+                        // setisValidName("");
+                        dispatch(resetHelperTextName());
                       }}
                       onBlur={(e) => {
                         if (e.currentTarget.value.length < 1) {
-                          setisValidName("Name cannot be empty");
+                          // setisValidName("Name cannot be empty");
+                          dispatch(setHelperTextName());
                         }
                       }}
                     />
