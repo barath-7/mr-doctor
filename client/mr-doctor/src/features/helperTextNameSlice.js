@@ -31,6 +31,7 @@ export const helperTextNameSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setHelperTextName, resetHelperTextName } = helperTextNameSlice.actions;
+export const { setHelperTextName, resetHelperTextName } =
+  helperTextNameSlice.actions;
 
 export default helperTextNameSlice.reducer;
