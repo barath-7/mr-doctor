@@ -1,45 +1,68 @@
 import * as React from "react";
-import apiCalls from "../utils/apiCalls";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setHelperTextName,
-  resetHelperTextName,
-} from "../features/helperTextNameSlice";
-import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Gender from "../components/Gender";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  setHelperTextName,
+  resetHelperTextName,
+} from "../features/helperTextSlices/helperTextNameSlice";
+import {
+  setHelperTextPhoneNumber,
+  resetHelperTextPhoneNumber,
+} from "../features/helperTextSlices/helperTextPhoneNumberSlice";
+import {
+  setHelperTextEmail,
+  resetHelperTextEmail,
+} from "../features/helperTextSlices/helperTextEmailSlice";
+import {
+  setHelperTextPassword,
+  resetHelperTextPassword,
+} from "../features/helperTextSlices/helperTextPasswordSlice";
+
+import Gender from "../components/Gender";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import AlertDialog from "../components/AlertDialog";
+
 import { handleSubmit } from "../utils/formSubmit";
 import phoneValidator from "../utils/phoneNumber";
+import apiCalls from "../utils/apiCalls";
 import { aadhaarNumberValidator } from "../utils/aadharValidator";
-import { useNavigate } from "react-router-dom";
-import AlertDialog from "../components/AlertDialog";
+
+import { Link, useNavigate } from "react-router-dom";
 
 var validator = require("email-validator");
 
 const theme = createTheme();
 
 export default function RegisterationView() {
+  /************************************/
+
   const history = useNavigate();
-  // const [isValidName, setisValidName] = React.useState("");
   const isValidName = useSelector((state) => {
     return state.helperTextName.value;
   });
+  const isValidPhone = useSelector((state) => {
+    return state.helperTextPhoneNumber.value;
+  });
+  const isValidEmail = useSelector((state) => {
+    return state.helperTextEmail.value;
+  });
+  const isValidPassword = useSelector(
+    (state) => state.helperTextPassword.value
+  );
   const dispatch = useDispatch();
-  const [isValidEmail, setIsValidEmail] = React.useState(false);
-
-  const [isValidPhone, setIsValidPhone] = React.useState(false);
-  const [isValidPassword, setIsValidPassword] = React.useState(false);
   const [isValidAddress, setIsValidAddress] = React.useState(false);
   const [isValidDOB, setIsValidDOB] = React.useState(false);
   const [isValidAadhar, setIsValidAadhar] = React.useState(false);
@@ -49,6 +72,7 @@ export default function RegisterationView() {
     title: "",
     message: "",
   });
+
   const handleClose = () => {
     setModal({
       ...modal,
@@ -57,8 +81,8 @@ export default function RegisterationView() {
       message: "",
     });
   };
-  React.useEffect(() => {
-    if (
+  const detailsValidator = () => {
+    return (
       isValidName.length < 1 &&
       !isValidAadhar &&
       !isValidAddress &&
@@ -67,7 +91,11 @@ export default function RegisterationView() {
       !isValidPassword &&
       !isValidPhone &&
       user?.phoneNumber?.length > 1
-    ) {
+    );
+  };
+
+  React.useEffect(() => {
+    if (detailsValidator()) {
       console.log("User registeration request initiated", user);
       apiCalls
         .registerUser(user)
@@ -154,10 +182,8 @@ export default function RegisterationView() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      error={isValidEmail}
-                      helperText={
-                        isValidEmail ? "Email is incorrect or empty" : ""
-                      }
+                      error={isValidEmail.length > 1}
+                      helperText={isValidEmail}
                       fullWidth
                       required
                       id="email"
@@ -165,26 +191,22 @@ export default function RegisterationView() {
                       name="email"
                       autoComplete="email"
                       onFocus={() => {
-                        if (isValidEmail) {
-                          setIsValidEmail(false);
-                        }
+                        dispatch(resetHelperTextEmail());
                       }}
                       onBlur={(e) => {
                         if (
-                          e.target.value !== "" ||
+                          e.target.value === "" ||
                           !validator?.validate(e.target.value)
                         ) {
-                          setIsValidEmail(true);
+                          dispatch(setHelperTextEmail());
                         }
                       }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      error={isValidPhone}
-                      helperText={
-                        isValidPhone ? "Phone number is incorrect or empty" : ""
-                      }
+                      error={isValidPhone.length > 1}
+                      helperText={isValidPhone}
                       required
                       fullWidth
                       name="phoneNumber"
@@ -192,14 +214,12 @@ export default function RegisterationView() {
                       type="tel"
                       id="phoneNumber"
                       autoComplete="phone-number"
-                      onFocus={(e) => {
-                        if (isValidPhone) {
-                          setIsValidPhone(false);
-                        }
+                      onFocus={() => {
+                        dispatch(resetHelperTextPhoneNumber());
                       }}
                       onBlur={(e) => {
                         if (!phoneValidator(e.target.value)) {
-                          setIsValidPhone(true);
+                          dispatch(setHelperTextPhoneNumber());
                         }
                       }}
                     />
@@ -218,13 +238,11 @@ export default function RegisterationView() {
                       id="password"
                       autoComplete="new-password"
                       onFocus={(e) => {
-                        if (isValidPassword) {
-                          setIsValidPassword(false);
-                        }
+                        dispatch(resetHelperTextPassword());
                       }}
                       onBlur={(e) => {
                         if (e.target.value.length < 1) {
-                          setIsValidPassword(true);
+                          dispatch(setHelperTextPassword());
                         }
                       }}
                     />
@@ -321,9 +339,7 @@ export default function RegisterationView() {
                       id="aadhar"
                       autoComplete="aadhar"
                       onFocus={(e) => {
-                        if (isValidPhone) {
-                          setIsValidAadhar(false);
-                        }
+                        setIsValidAadhar(false);
                       }}
                       onBlur={(e) => {
                         if (!aadhaarNumberValidator(e.target.value)) {
