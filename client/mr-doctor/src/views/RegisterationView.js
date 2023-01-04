@@ -29,6 +29,14 @@ import {
   setHelperTextPassword,
   resetHelperTextPassword,
 } from "../features/helperTextSlices/helperTextPasswordSlice";
+import {
+  setHelperTextAddress,
+  resetHelperTextAddress,
+} from "../features/helperTextSlices/helperTextAddressSlice";
+import {
+  setHelpertextDob,
+  resetHelpertextDob,
+} from "../features/helperTextSlices/helperTextDobSlice";
 
 import Gender from "../components/Gender";
 import Header from "../components/Header";
@@ -56,15 +64,14 @@ export default function RegisterationView() {
   const isValidPhone = useSelector((state) => {
     return state.helperTextPhoneNumber.value;
   });
-  const isValidEmail = useSelector((state) => {
-    return state.helperTextEmail.value;
-  });
+  const isValidEmail = useSelector((state) => state.helperTextEmail.value);
   const isValidPassword = useSelector(
     (state) => state.helperTextPassword.value
   );
+  const isValidAddress = useSelector((state) => state.helperTextAddress.value);
+  const isValidDOB = useSelector((state) => state.helperTextDob.value);
+
   const dispatch = useDispatch();
-  const [isValidAddress, setIsValidAddress] = React.useState(false);
-  const [isValidDOB, setIsValidDOB] = React.useState(false);
   const [isValidAadhar, setIsValidAadhar] = React.useState(false);
   const [user, setUser] = React.useState({});
   const [modal, setModal] = React.useState({
@@ -95,7 +102,7 @@ export default function RegisterationView() {
   };
 
   React.useEffect(() => {
-    if (detailsValidator()) {
+    if (detailsValidator() && user) {
       console.log("User registeration request initiated", user);
       apiCalls
         .registerUser(user)
@@ -226,10 +233,8 @@ export default function RegisterationView() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      error={isValidPassword}
-                      helperText={
-                        isValidPassword ? "Password is incorrect or empty" : ""
-                      }
+                      error={isValidPassword.length > 1}
+                      helperText={isValidPassword}
                       required
                       fullWidth
                       name="password"
@@ -249,18 +254,14 @@ export default function RegisterationView() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      error={isValidDOB}
-                      helperText={
-                        isValidDOB ? "Date of birth cannot be empty" : ""
-                      }
-                      onFocus={(e) => {
-                        if (isValidPassword) {
-                          setIsValidDOB(false);
-                        }
+                      error={isValidDOB.length > 1}
+                      helperText={isValidDOB}
+                      onFocus={() => {
+                        dispatch(resetHelpertextDob());
                       }}
                       onBlur={(e) => {
                         if (e.target.value.length < 1) {
-                          setIsValidDOB(true);
+                          dispatch(setHelpertextDob());
                         }
                       }}
                       required
@@ -278,18 +279,14 @@ export default function RegisterationView() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      error={isValidAddress}
-                      helperText={
-                        isValidAddress ? "Address or Pincode is empty" : ""
-                      }
+                      error={isValidAddress.length > 1}
+                      helperText={isValidAddress}
                       onFocus={(e) => {
-                        if (isValidAddress) {
-                          setIsValidAddress(false);
-                        }
+                        dispatch(resetHelperTextAddress());
                       }}
                       onBlur={(e) => {
                         if (e.target.value.length < 1) {
-                          setIsValidAddress(true);
+                          dispatch(setHelperTextAddress());
                         }
                       }}
                       required
@@ -310,25 +307,21 @@ export default function RegisterationView() {
                       type="text"
                       id="pinCode"
                       autoComplete="address"
-                      error={isValidAddress}
-                      helperText={
-                        isValidAddress ? "Address or Pincode is empty" : ""
-                      }
+                      error={isValidAddress.length > 1}
+                      helperText={isValidAddress}
                       onFocus={(e) => {
-                        if (isValidAddress) {
-                          setIsValidAddress(false);
-                        }
+                        dispatch(resetHelperTextAddress());
                       }}
                       onBlur={(e) => {
                         if (e.target.value.length < 1) {
-                          setIsValidAddress(true);
+                          dispatch(setHelperTextAddress());
                         }
                       }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      error={isValidAadhar}
+                      error={isValidAadhar.length > 1}
                       helperText={
                         isValidAadhar ? "Aadhar number is invalid" : ""
                       }
@@ -358,7 +351,6 @@ export default function RegisterationView() {
                     e.preventDefault();
                     const result = handleSubmit(e);
                     if (result) {
-                      console.log(result);
                       setUser(result);
                     }
                   }}
