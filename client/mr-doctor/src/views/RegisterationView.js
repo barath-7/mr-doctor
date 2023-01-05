@@ -37,6 +37,7 @@ import {
   setHelpertextDob,
   resetHelpertextDob,
 } from "../features/helperTextSlices/helperTextDobSlice";
+import { setUserData } from "../features/userSlices/userSlice";
 
 import Gender from "../components/Gender";
 import Header from "../components/Header";
@@ -102,6 +103,7 @@ export default function RegisterationView() {
   };
 
   React.useEffect(() => {
+    console.log(user);
     if (detailsValidator() && user) {
       console.log("User registeration request initiated", user);
       apiCalls
@@ -149,7 +151,19 @@ export default function RegisterationView() {
               <Typography component="h1" variant="h5">
                 Register here !
               </Typography>
-              <Box component="form" noValidate sx={{ mt: 3, mb: 8 }}>
+              <Box
+                component="form"
+                noValidate
+                sx={{ mt: 3, mb: 8 }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const result = handleSubmit(e);
+                  if (result) {
+                    setUser(result);
+                    // dispatch(setUserData(result));
+                  }
+                }}
+              >
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -321,7 +335,7 @@ export default function RegisterationView() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      error={isValidAadhar.length > 1}
+                      error={isValidAadhar}
                       helperText={
                         isValidAadhar ? "Aadhar number is invalid" : ""
                       }
@@ -347,13 +361,6 @@ export default function RegisterationView() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const result = handleSubmit(e);
-                    if (result) {
-                      setUser(result);
-                    }
-                  }}
                 >
                   Register
                 </Button>
