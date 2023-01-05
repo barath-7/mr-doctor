@@ -14,6 +14,5 @@ export const store = configureStore({
     helperTextPassword: helperTextPasswordSlice,
     helperTextAddress: helperTextAddressSlice,
     helperTextDob: helperTextDobSlice,
-
   },
 });
