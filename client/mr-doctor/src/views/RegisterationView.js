@@ -37,7 +37,6 @@ import {
   setHelpertextDob,
   resetHelpertextDob,
 } from "../features/helperTextSlices/helperTextDobSlice";
-import { setUserData } from "../features/userSlices/userSlice";
 
 import Gender from "../components/Gender";
 import Header from "../components/Header";
