@@ -14,5 +14,6 @@ export const handleSubmit = (event) => {
   userData["address"] = userDataTemp.address + "\n" + userDataTemp.pincode;
   userData["aadhaarNumber"] = userDataTemp.aadhar;
   userData["gender"] = userDataTemp.gender;
+  console.log(userData);
   return userData;
 };
