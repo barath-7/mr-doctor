@@ -52,7 +52,7 @@ export default function Home() {
               <Typography sx={{ color: "InfoText" }}>
                 Please select yes if you are a doctor
               </Typography>
-              <Button  sx={{ mt: 3, color: "black" }}>Yes</Button>
+              <Button sx={{ mt: 3, color: "black" }}>Yes</Button>
               <Button sx={{ mt: 3, color: "black" }}>No</Button>
             </Box>
           </Box>
