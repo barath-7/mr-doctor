@@ -5,6 +5,7 @@ import helperTextEmailSlice from "../features/helperTextSlices/helperTextEmailSl
 import helperTextPasswordSlice from "../features/helperTextSlices/helperTextPasswordSlice";
 import helperTextAddressSlice from "../features/helperTextSlices/helperTextAddressSlice";
 import helperTextDobSlice from "../features/helperTextSlices/helperTextDobSlice";
+import doctorCheckSlice from "../features/doctorCheckSlice/doctorCheckSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     helperTextPassword: helperTextPasswordSlice,
     helperTextAddress: helperTextAddressSlice,
     helperTextDob: helperTextDobSlice,
+    doctorCheck: doctorCheckSlice,
   },
 });
