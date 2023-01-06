@@ -58,6 +58,9 @@ export default function RegisterationView() {
   /************************************/
 
   const history = useNavigate();
+  const doctorCheck = useSelector((state) => {
+    return state.doctorCheck.value;
+  });
   const isValidName = useSelector((state) => {
     return state.helperTextName.value;
   });
@@ -332,6 +335,29 @@ export default function RegisterationView() {
                       }}
                     />
                   </Grid>
+                  {doctorCheck === "true" ? (
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        name="dcotorId"
+                        label="Doctor ID"
+                        type="text"
+                        id="doctorId"
+                        autoComplete="doctorId"
+                        onFocus={(e) => {
+                          // dispatch(resetHelperTextAddress());
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value.length < 1) {
+                            // dispatch(setHelperTextAddress());
+                          }
+                        }}
+                      />
+                    </Grid>
+                  ) : (
+                    <></>
+                  )}
                   <Grid item xs={12}>
                     <TextField
                       error={isValidAadhar}

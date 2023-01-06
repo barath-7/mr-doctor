@@ -21,32 +21,34 @@ export default function Header(props) {
           }}
         >
           <div style={{ width: "50vh" }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <img
-                src={drLogo}
-                alt="bug"
-                height={80}
-                style={{
-                  opacity: 0.7,
-                  borderRadius: "25px",
-                  marginRight: "1rem",
-                }}
-              />
-              <Typography
-                variant="h4"
-                component="div"
-                sx={{ flexGrow: 1 }}
-                style={{ color: "InfoText", fontFamily: "monospace" }}
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
               >
-                Mr-Dr
-              </Typography>
-            </IconButton>
+                <img
+                  src={drLogo}
+                  alt="bug"
+                  height={80}
+                  style={{
+                    opacity: 0.7,
+                    borderRadius: "25px",
+                    marginRight: "1rem",
+                  }}
+                />
+                <Typography
+                  variant="h4"
+                  component="div"
+                  sx={{ flexGrow: 1 }}
+                  style={{ color: "InfoText", fontFamily: "monospace" }}
+                >
+                  Mr-Dr
+                </Typography>
+              </IconButton>
+            </Link>
           </div>
           <div style={{ width: "50vh" }}>
             {props.of !== "login" && props.of !== "home" ? (
