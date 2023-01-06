@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 export default function Header(props) {
   return (
-    <Box sx={{ flexGrow: 1, width: 800 }}>
+    <Box sx={{ flexGrow: 1, width: 800 }} style={{ marginBottom: "5rem" }}>
       <AppBar position="fixed" style={{ backgroundColor: "snow" }}>
         <Toolbar
           variant="regular"
@@ -49,7 +49,7 @@ export default function Header(props) {
             </IconButton>
           </div>
           <div style={{ width: "50vh" }}>
-            {props.of !== "login" ? (
+            {props.of !== "login" && props.of !== "home" ? (
               <Link to="/login" style={{ textDecoration: "none" }}>
                 <Button color="primary">
                   <Typography
@@ -62,7 +62,7 @@ export default function Header(props) {
                   </Typography>
                 </Button>
               </Link>
-            ) : (
+            ) : props.of === "register" ? (
               <>
                 <Link to="/register" style={{ textDecoration: "none" }}>
                   <Button color="inherit">
@@ -77,6 +77,8 @@ export default function Header(props) {
                   </Button>
                 </Link>
               </>
+            ) : (
+              <></>
             )}
           </div>
         </Toolbar>
