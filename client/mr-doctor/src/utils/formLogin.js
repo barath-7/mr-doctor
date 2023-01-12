@@ -7,6 +7,8 @@ export const handleSubmit = (event) => {
     userDataTemp[pair[0]] = pair[1];
   }
   userData["password"] = userDataTemp.password;
-  userData["phoneNumber"] = userDataTemp.phoneNumber;
+  userDataTemp.phoneNumber
+    ? (userData["phoneNumber"] = userDataTemp.phoneNumber)
+    : (userData["doctorId"] = userDataTemp.doctorId);
   return userData;
 };

@@ -18,6 +18,10 @@ import {
   resetHelperTextName,
 } from "../features/helperTextSlices/helperTextNameSlice";
 import {
+  setHelperTextDoctorId,
+  resetHelperTextDoctorId,
+} from "../features/helperTextSlices/helperTextDoctorIdSlice";
+import {
   setHelperTextPhoneNumber,
   resetHelperTextPhoneNumber,
 } from "../features/helperTextSlices/helperTextPhoneNumberSlice";
@@ -73,6 +77,9 @@ export default function RegisterationView() {
   );
   const isValidAddress = useSelector((state) => state.helperTextAddress.value);
   const isValidDOB = useSelector((state) => state.helperTextDob.value);
+  const isValidDoctorId = useSelector(
+    (state) => state.helperTextDoctorId.value
+  );
 
   const dispatch = useDispatch();
   const [isValidAadhar, setIsValidAadhar] = React.useState(false);
@@ -108,14 +115,13 @@ export default function RegisterationView() {
     console.log(user);
     if (detailsValidator() && user) {
       console.log("User registeration request initiated", user);
-      apiCalls
-        .registerUser(user)
-        .then((res) => {
-          if (res.status === 200) {
+      (async () => {
+        try {
+          const result = await apiCalls.registerUser(user);
+          if (result?.data?.status === "success") {
             history("/");
           }
-        })
-        .catch((e) => {
+        } catch (e) {
           if (!modal?.show) {
             setModal({
               ...modal,
@@ -128,7 +134,29 @@ export default function RegisterationView() {
             "Received error as promise from API",
             e.response.data.message
           );
-        });
+        }
+      })();
+      // apiCalls
+      //   .registerUser(user)
+      //   .then((res) => {
+      //     if (res.status === 200) {
+      //       history("/");
+      //     }
+      //   })
+      //   .catch((e) => {
+      //     if (!modal?.show) {
+      //       setModal({
+      //         ...modal,
+      //         show: true,
+      //         title: "Sign Up failed",
+      //         message: e.response.data.message,
+      //       });
+      //     }
+      //     console.log(
+      //       "Received error as promise from API",
+      //       e.response.data.message
+      //     );
+      //   });
     }
   }, [user, history]);
 
@@ -338,6 +366,8 @@ export default function RegisterationView() {
                   {doctorCheck === "true" ? (
                     <Grid item xs={12}>
                       <TextField
+                        error={isValidDoctorId.length > 1}
+                        helperText={isValidDoctorId}
                         required
                         fullWidth
                         name="dcotorId"
@@ -346,11 +376,11 @@ export default function RegisterationView() {
                         id="doctorId"
                         autoComplete="doctorId"
                         onFocus={(e) => {
-                          // dispatch(resetHelperTextAddress());
+                          dispatch(resetHelperTextDoctorId());
                         }}
                         onBlur={(e) => {
                           if (e.target.value.length < 1) {
-                            // dispatch(setHelperTextAddress());
+                            dispatch(setHelperTextDoctorId());
                           }
                         }}
                       />
