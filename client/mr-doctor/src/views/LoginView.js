@@ -17,11 +17,30 @@ import phoneValidator from "../utils/phoneNumber";
 import { handleSubmit } from "../utils/formLogin";
 import apiCalls from "../utils/apiCalls";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setHelperTextDoctorId,
+  resetHelperTextDoctorId,
+} from "../features/helperTextSlices/helperTextDoctorIdSlice";
+import {
+  setHelperTextPassword,
+  resetHelperTextPassword,
+} from "../features/helperTextSlices/helperTextPasswordSlice";
 
 const theme = createTheme();
 
 export default function LoginView() {
   const history = useNavigate();
+  const doctorCheck = useSelector((state) => {
+    return state.doctorCheck.value;
+  });
+  const isValidDoctorId = useSelector((state) => {
+    return state.helperTextDoctorId.value;
+  });
+  const isValidPassword = useSelector(
+    (state) => state.helperTextPassword.value
+  );
+  const dispatch = useDispatch();
   const [isValidPhone, setIsValidPhone] = React.useState(false);
   const [user, setUser] = React.useState({});
   const [modal, setModal] = React.useState({
@@ -29,6 +48,7 @@ export default function LoginView() {
     title: "",
     message: "",
   });
+
   const handleClose = () => {
     setModal({
       ...modal,
@@ -39,7 +59,7 @@ export default function LoginView() {
     // window.location.reload();
   };
   React.useEffect(() => {
-    if (user.phoneNumber?.length === 10) {
+    if (!(isValidPhone || isValidDoctorId) && !isValidPassword) {
       console.log("User login request initiated", user);
       (async () => {
         try {
@@ -47,17 +67,7 @@ export default function LoginView() {
           if (result?.data?.status === "success") {
             history("/");
           }
-        } catch (err) {}
-      })();
-      apiCalls
-        .loginUser(user)
-        .then((res) => {
-          if (res.status === 200) {
-            history("/");
-          }
-          console.log("Received result as promise from apiCall", res);
-        })
-        .catch((e) => {
+        } catch (e) {
           if (!modal.show) {
             setModal({
               ...modal,
@@ -70,7 +80,30 @@ export default function LoginView() {
             "Received error as promise from API",
             e.response.data.message
           );
-        });
+        }
+      })();
+      // apiCalls
+      //   .loginUser(user)
+      //   .then((res) => {
+      //     if (res.status === 200) {
+      //       history("/");
+      //     }
+      //     console.log("Received result as promise from apiCall", res);
+      //   })
+      //   .catch((e) => {
+      //     if (!modal.show) {
+      //       setModal({
+      //         ...modal,
+      //         show: true,
+      //         title: "Sign in failed",
+      //         message: e.response.data.message,
+      //       });
+      //     }
+      //     console.log(
+      //       "Received error as promise from API",
+      //       e.response.data.message
+      //     );
+      //   });
     }
   }, [user, history]);
 
@@ -105,31 +138,56 @@ export default function LoginView() {
                 noValidate
                 sx={{ mt: 1 }}
               >
-                <TextField
-                  error={isValidPhone}
-                  helperText={
-                    isValidPhone ? "Phone number is incorrect or empty" : ""
-                  }
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="phoneNumber"
-                  label="Phone number"
-                  name="phoneNumber"
-                  autoComplete="phoneNumber"
-                  autoFocus
-                  onFocus={(e) => {
-                    if (isValidPhone) {
-                      setIsValidPhone(false);
+                {doctorCheck === "true" ? (
+                  <TextField
+                    error={isValidDoctorId}
+                    helperText={isValidDoctorId}
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="doctorId"
+                    label="Doctor ID"
+                    name="doctorId"
+                    autoComplete="doctorId"
+                    autoFocus
+                    onFocus={(e) => {
+                      dispatch(resetHelperTextDoctorId());
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value.length < 1) {
+                        dispatch(setHelperTextDoctorId());
+                      }
+                    }}
+                  />
+                ) : (
+                  <TextField
+                    error={isValidPhone}
+                    helperText={
+                      isValidPhone ? "Phone number is incorrect or empty" : ""
                     }
-                  }}
-                  onBlur={(e) => {
-                    if (!phoneValidator(e.target.value)) {
-                      setIsValidPhone(true);
-                    }
-                  }}
-                />
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="phoneNumber"
+                    label="Phone number"
+                    name="phoneNumber"
+                    autoComplete="phoneNumber"
+                    autoFocus
+                    onFocus={(e) => {
+                      if (isValidPhone) {
+                        setIsValidPhone(false);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (!phoneValidator(e.target.value)) {
+                        setIsValidPhone(true);
+                      }
+                    }}
+                  />
+                )}
                 <TextField
+                  error={isValidPassword.length > 1}
+                  helperText={isValidPassword}
                   margin="normal"
                   required
                   fullWidth
@@ -138,6 +196,14 @@ export default function LoginView() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  onFocus={(e) => {
+                    dispatch(resetHelperTextPassword());
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value.length < 1) {
+                      dispatch(setHelperTextPassword());
+                    }
+                  }}
                 />
                 <Button
                   type="submit"
