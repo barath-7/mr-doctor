@@ -136,27 +136,6 @@ export default function RegisterationView() {
           );
         }
       })();
-      // apiCalls
-      //   .registerUser(user)
-      //   .then((res) => {
-      //     if (res.status === 200) {
-      //       history("/");
-      //     }
-      //   })
-      //   .catch((e) => {
-      //     if (!modal?.show) {
-      //       setModal({
-      //         ...modal,
-      //         show: true,
-      //         title: "Sign Up failed",
-      //         message: e.response.data.message,
-      //       });
-      //     }
-      //     console.log(
-      //       "Received error as promise from API",
-      //       e.response.data.message
-      //     );
-      //   });
     }
   }, [user, history]);
 
@@ -190,7 +169,6 @@ export default function RegisterationView() {
                   const result = handleSubmit(e);
                   if (result) {
                     setUser(result);
-                    // dispatch(setUserData(result));
                   }
                 }}
               >
@@ -211,12 +189,10 @@ export default function RegisterationView() {
                       label="First Name"
                       autoFocus
                       onFocus={(e) => {
-                        // setisValidName("");
                         dispatch(resetHelperTextName());
                       }}
                       onBlur={(e) => {
                         if (e.currentTarget.value.length < 1) {
-                          // setisValidName("Name cannot be empty");
                           dispatch(setHelperTextName());
                         }
                       }}
