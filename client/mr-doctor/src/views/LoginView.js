@@ -82,28 +82,6 @@ export default function LoginView() {
           );
         }
       })();
-      // apiCalls
-      //   .loginUser(user)
-      //   .then((res) => {
-      //     if (res.status === 200) {
-      //       history("/");
-      //     }
-      //     console.log("Received result as promise from apiCall", res);
-      //   })
-      //   .catch((e) => {
-      //     if (!modal.show) {
-      //       setModal({
-      //         ...modal,
-      //         show: true,
-      //         title: "Sign in failed",
-      //         message: e.response.data.message,
-      //       });
-      //     }
-      //     console.log(
-      //       "Received error as promise from API",
-      //       e.response.data.message
-      //     );
-      //   });
     }
   }, [user, history]);
 

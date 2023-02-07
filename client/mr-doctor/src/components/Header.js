@@ -51,7 +51,7 @@ export default function Header(props) {
             </Link>
           </div>
           <div style={{ width: "50vh" }}>
-            {props.of !== "login" && props.of !== "home" ? (
+            {props.of === "register" ? (
               <Link to="/login" style={{ textDecoration: "none" }}>
                 <Button color="primary">
                   <Typography
@@ -64,7 +64,7 @@ export default function Header(props) {
                   </Typography>
                 </Button>
               </Link>
-            ) : props.of === "register" ? (
+            ) : props.of === "login" ? (
               <>
                 <Link to="/register" style={{ textDecoration: "none" }}>
                   <Button color="inherit">
